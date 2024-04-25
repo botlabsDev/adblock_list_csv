@@ -8,16 +8,19 @@ import requests
 
 URLS = [
     "https://adaway.org/hosts.txt",
-    "https://v.firebog.net/hosts/AdguardDNS.txt",
     "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt",
-    "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
+    "https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts",
+    "https://raw.githubusercontent.com/jdlingyu/ad-wars/master/hosts",
+    "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt",
+    "https://v.firebog.net/hosts/AdguardDNS.txt",
+    "https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt",
 ]
 
 
 def main(opts: argparse.Namespace):
     lines = [line for url in URLS for line in download_file(url).splitlines()]
-    lines = sorted(set(l for line in lines for l in extract_domain(line.decode())))
-    lines.remove("")
+    domains = [domain for raw_line in lines for domain in extract_domain(raw_line.decode())]
+    lines = clean_list(domains)
 
     pprint(lines)
     print(len(lines))
@@ -32,9 +35,27 @@ def download_file(url: str, ):
 
 
 def extract_domain(line: str) -> Iterable[str]:
-    pprint(line)
     if not line.startswith("#"):
         yield line.split(" ").pop()
+
+
+def clean_list(lines) -> List[str]:
+    remove_entries = {
+        '',
+        "",
+        "localhost",
+    }
+    for line in lines:
+        if line.count(".") == 0:
+            remove_entries.add(line)
+        if len(line) < 3:
+            remove_entries.add(line)
+
+    lines = set(lines)
+    for entry in remove_entries:
+        if entry in lines:
+            lines.remove(entry)
+    return sorted(lines)
 
 
 def write_csv_file(file_name: Path, lines: List[str]):
