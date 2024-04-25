@@ -6,7 +6,7 @@ on: # yamllint disable-line rule:truthy
       - main
       - master
   schedule:
-    - cron: '*/3 * * * *'
+    - cron: '30 7 * * *'
 
 jobs:
   scheduled_creation:
@@ -30,11 +30,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create rss files
+      - name: Update adlist.csv
         run: |
           python3 create_csv_adblock_list.py
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Update rss feeds
+          commit_message: Update adlist.csv
           file_pattern: adlist.csv
