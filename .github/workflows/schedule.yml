@@ -1,0 +1,39 @@
+name: Create adblock csv file via schedule
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+    schedule:
+      - cron: '0 30 7 * * *'
+
+jobs:
+  scheduled_creation:
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create rss files
+        run: |
+          python3 create_csv_adblock_list.py
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update rss feeds
+          file_pattern: adlist.csv
