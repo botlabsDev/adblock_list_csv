@@ -4,6 +4,7 @@ on: # yamllint disable-line rule:truthy
   push:
     branches:
       - main
+      - master
   schedule:
     - cron: '*/3 * * * *'
 
