@@ -2,6 +2,9 @@
 
 # Overview
 
+(!) UPDATE DAILY at 7:30!
+
+
 Collect multiple Adblock lists and convert them into one big csv file
 
 ```bash
