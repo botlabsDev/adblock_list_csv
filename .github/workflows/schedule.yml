@@ -6,7 +6,7 @@ on: # yamllint disable-line rule:truthy
       - main
       - master
   schedule:
-    - cron: '30 7 * * *'
+    - cron: "30 * * * *"
 
 jobs:
   scheduled_creation:
