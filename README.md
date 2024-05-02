@@ -1,4 +1,4 @@
-[![Create ignore_list csv file via schedule](https://github.com/botlabsDev/ignore_list_csv/actions/workflows/schedule.yml/badge.svg)](https://github.com/botlabsDev/ignore_list_csv/actions/workflows/schedule.yml)
+[![Create ignore_list csv file via schedule](https://github.com/botlabsDev/ignore_list_csv/actions/workflows/schedule.yml/badge.svg?branch=master)](https://github.com/botlabsDev/ignore_list_csv/actions/workflows/schedule.yml)
 
 # Overview
 
