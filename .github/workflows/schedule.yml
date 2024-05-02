@@ -32,7 +32,7 @@ jobs:
 
       - name: Update ignore_list.csv
         run: |
-          python3 create_csv_ignore_list_list.py
+          python3 create_csv_ignore_list.py
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
