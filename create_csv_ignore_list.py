@@ -76,7 +76,7 @@ def clean_list(lines) -> List[str]:
 
 def write_csv_file(file_name: Path, lines: List[str]):
     with file_name.open("w") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=["ad_domain"])
+        writer = csv.DictWriter(csvfile, fieldnames=["ignore_domain"])
 
         writer.writeheader()
         for line in lines:
