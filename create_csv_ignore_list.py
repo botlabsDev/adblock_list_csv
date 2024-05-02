@@ -17,7 +17,7 @@ URLS = [
     "https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt",
 ]
 
-UMBRELLA_URL = "http://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip"
+UMBRELLA_URL = "https://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip"
 
 
 def main(opts: argparse.Namespace):
@@ -80,12 +80,12 @@ def write_csv_file(file_name: Path, lines: List[str]):
 
         writer.writeheader()
         for line in lines:
-            writer.writerow({'ad_domain': line})
+            writer.writerow({'ignore_domain': line})
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', type=Path, default=Path("adlist.csv"), help="Output CSV file")
+    parser.add_argument('--file', type=Path, default=Path("ignore_list.csv"), help="Output CSV file")
     return parser.parse_args()
 
 
