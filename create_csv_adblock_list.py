@@ -3,6 +3,7 @@ import csv
 from pathlib import Path
 from pprint import pprint
 from typing import Iterable, List
+from zipfile import ZipFile
 
 import requests
 
@@ -16,22 +17,37 @@ URLS = [
     "https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt",
 ]
 
+UMBRELLA_URL = "http://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip"
+
 
 def main(opts: argparse.Namespace):
-    lines = [line for url in URLS for line in download_file(url).splitlines()]
-    domains = [domain for raw_line in lines for domain in extract_domain(raw_line.decode())]
-    lines = clean_list(domains)
+    cache_zip_file = Path("/tmp/umbrella_top-1m.csv.zip")
+    cache_zip_file.unlink(missing_ok=True)
+    cache_zip_file.write_bytes(download_file(UMBRELLA_URL))
 
-    pprint(lines)
-    print(len(lines))
+    umbrella_lines = [line.split(",")[1] for line in unzip_and_read_lines(cache_zip_file)]
 
-    write_csv_file(opts.file, lines)
+    add_lines = [line for url in URLS for line in download_file(url).splitlines()]
+    add_domains = [domain for raw_line in add_lines for domain in extract_domain(raw_line.decode())]
+
+    add_lines = clean_list(add_domains + umbrella_lines)
+    pprint(add_lines)
+    print(len(add_lines))
+
+    write_csv_file(opts.file, add_lines)
 
 
 def download_file(url: str, ):
     r = requests.get(url, stream=True)
     r.raise_for_status()
     return r.content
+
+
+def unzip_and_read_lines(cache_zip_file: Path) -> Iterable[str]:
+    with ZipFile(cache_zip_file.absolute()) as myzip:
+        with myzip.open('top-1m.csv') as myfile:
+            for line in myfile.read().decode().splitlines():
+                yield line
 
 
 def extract_domain(line: str) -> Iterable[str]:
